@@ -5,9 +5,6 @@
         static void Main()
         {
             var hmnLst = FillCorp();
-
-            //подстановка имени если изначально было неизвестно
-
             var code = Console.ReadLine();
             var tmpE = new List<Human>();
             var tmp = SearchUnders(hmnLst, code, ref tmpE);
