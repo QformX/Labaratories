@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//array arraylist hash таблицы
 
-namespace ConsoleApplication38
+namespace ConsoleApplication39
 {
     class Program
     {
@@ -15,50 +16,64 @@ namespace ConsoleApplication38
         {
             vertices = int.Parse(Console.ReadLine());
             graph = new int[vertices][];
-
             for (int i = 0; i < vertices; i++)
             {
-                graph[i] = new int[vertices];
-                string[] line = Console.ReadLine().Split();
-                for (int j = 0; j < vertices; j++)
-                {
-                    graph[i][j] = int.Parse(line[j]);
-                }
+                graph[i] = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
             }
-            int start = 0;
-            List<int> visited = new List<int>();
-            List<Tuple<int, int>> mst = new List<Tuple<int, int>>();
-            int weight = 0;
+            int[] minDistances = new int[vertices];
+            int[] parents = new int[vertices];
+            bool[] visited = new bool[vertices];
 
-            visited.Add(start);
-
-            while (visited.Count < vertices)
+            for (int i = 1; i < vertices; i++)
             {
-                int minWeight = int.MaxValue;
-                Tuple<int, int> edge = null;
+                minDistances[i] = int.MaxValue;
+            }
 
-                foreach (int v in visited)
+            minDistances[0] = 0;
+            parents[0] = -1;
+
+            for (int i = 0; i < vertices - 1; i++)
+            {
+                int u = GetMinDistanceVertex(minDistances, visited);
+                visited[u] = true;
+                for (int v = 0; v < vertices; v++)
                 {
-                    for (int i = 0; i < vertices; i++)
+                    if (graph[u][v] != 0 && !visited[v] && graph[u][v] < minDistances[v])
                     {
-                        if (!visited.Contains(i) && graph[v][i] != 0 && graph[v][i] < minWeight)
-                        {
-                            minWeight = graph[v][i];
-                            edge = new Tuple<int, int>(v, i);
-                        }
+                        minDistances[v] = graph[u][v];
+                        parents[v] = u;
                     }
                 }
-                mst.Add(edge);
-                weight += minWeight;
-                visited.Add(edge.Item2);
+
             }
-            Console.WriteLine("Minimum Spanning Tree: ");
-            foreach (Tuple<int, int> e in mst)
+            int minWeight = 0;
+            for (int i = 1; i < vertices; i++) {
+                minWeight += minDistances[i];
+            }
+
+            Console.WriteLine("Минимальные рёбра: ");
+            
+            for (int i = 1; i < vertices; i++)
             {
-                Console.WriteLine("{0} - {1}", e.Item1+1, e.Item2+1);
+                Console.WriteLine("{1}-{2}", parents[i], i);
             }
-            Console.WriteLine("Minimum weight of MST: {0}", weight);
+            Console.WriteLine("Минимальное основное древо имеет вес: " + minWeight);
             Console.ReadKey();
+        }
+        static int GetMinDistanceVertex(int[] minDistances, bool[] visited)
+        {
+            int minDistance = int.MaxValue;
+            int minDistanceVertex = -1;
+
+            for (int v = 0; v < vertices; v++)
+            {
+                if (!visited[v] && minDistances[v] < minDistance)
+                {
+                    minDistance = minDistances[v];
+                    minDistanceVertex = v;
+                }
+            }
+            return minDistanceVertex;
         }
     }
 }
