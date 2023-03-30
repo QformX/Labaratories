@@ -15,13 +15,13 @@ namespace ConsoleApplication37
             int[,] graph = FillMatrix(V);
             Console.WriteLine("The input graph matrix is: ");
             Print(graph, V);
-            var tmp = FloydNigger(graph, V, V-1);
+            var tmp = Floyd(graph, V, V-1);
             Console.WriteLine("The shortest distances between every pair os vertices is: ");
             Print(tmp, V);
             Console.ReadLine();
         }
 
-        public static int[,] FloydNigger(int[,] graph, int V, int c)
+        public static int[,] Floyd(int[,] graph, int V, int c)
         {
             if (c == -1)
 	        {
@@ -39,7 +39,7 @@ namespace ConsoleApplication37
                 }
             }
             c--;
-            return FloydNigger(tmp, V, c);
+            return Floyd(tmp, V, c);
         }
         public static void Print(int[,] graph, int V)
         {
