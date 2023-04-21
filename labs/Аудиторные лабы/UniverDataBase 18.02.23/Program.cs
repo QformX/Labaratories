@@ -10,69 +10,97 @@ namespace ConsoleApplication4
     {
         static void Main()
         {
-            var admins = new List<Admin>();
-            var teachers = new List<Teacher>();
-            var students = new List<Student>();
-
-            Console.WriteLine("Сколько администраторов?");
-            int n = Int32.Parse(Console.ReadLine());
-            for (int i = 0; i < n; i++)
+            Menu menu = new Menu(new string[]{"Создать управленца", "Ввести список студентов", "...", "Вывести приказы", "Список должников у преподавателя", "Список должников по предмету" }, "База данных университета", "Для выхода - Esc");
+            Admin adm = null;
+            List<Teacher> tchrs = new List<Teacher>();
+            List<Student> stdnts = new List<Student>();
+            do
             {
-                admins.Add(MakeNewAdmin());
-            }
+                int ind = menu.Choice();
+                if (ind == 0)
+                {
+                    Console.Clear();
+                    adm = Admin.MakeNewAdmin();
+                }
+                else if (ind == 1)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Кол-во студентов");
+                    int n = int.Parse(Console.ReadLine());
+                    for (int i = 0; i < n; i++)
+                    {
+                        stdnts.Add(Student.MakeNewStudent());
+                    }
+                }
+                else if (ind == 2)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Кол-во преподавателей");
+                    int n = int.Parse(Console.ReadLine());
+                    for (int i = 0; i < n; i++)
+                    {
+                        tchrs.Add(Teacher.MakeNewTeacher());
+                    }
+                }
+                else if (ind == 3)
+                {
+                    if (adm != null) adm.FilterOrders();
+                    else Console.WriteLine("Не создан управленец!");
+                }
+                else if (ind == 4)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Напишите фамилию преподавателя");
+                    FilterTaxes(Console.ReadLine(), tchrs, stdnts);
+                }
+                else if (ind == 5)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Название дисциплины");
+                    GetTaxes(stdnts, Console.ReadLine());
+                }
+                else if (ind == 100)
+                {
+                    Environment.Exit(0);
+                }
+            } while (true);
 
-            Console.WriteLine("Сколько преподавателей?");
-            int k = Int32.Parse(Console.ReadLine());
-            for (int i = 0; i < k; i++)
+        }
+
+        static void FilterTaxes(string sn, List<Teacher> t, List<Student> s)
+        {
+            
+            foreach (var item in t)
             {
-                teachers.Add(MakeNewTeacher());
+                if (sn == item.GetFIO)
+                {
+                    foreach (var disc in item.GetDisciplines)
+                    {
+                        foreach (var st in s)
+                        {
+                            if (st.IsHaveTaxesOn(disc))
+                            {
+                                Console.WriteLine(st.GetFIO + " | " + disc);
+                            }
+                        }
+                    }
+                }
             }
-
-            admins[0].Info();
             Console.ReadKey();
         }
 
-        static Admin MakeNewAdmin()
+        static void GetTaxes(List<Student> students, string disc)
         {
-            var a = Console.ReadLine();
-            var b = Console.ReadLine();
-            var c = Console.ReadLine();
-            var d = Console.ReadLine();
-            var e = Console.ReadLine();
-            Console.WriteLine("Кол-во приказов");
-            int k = Int32.Parse(Console.ReadLine());
-            List<Order> orders = new List<Order>();
-            for (int j = 0; j < k; j++)
+            Console.WriteLine($"Долги по {disc} имеют следующие студенты:");
+            foreach (var student in students)
             {
-                var a1 = Console.ReadLine();
-                var a2 = Int32.Parse(Console.ReadLine());
-                var a3 = Console.ReadLine();
-                var a4 = Console.ReadLine();
-                Order ord = new Order(a1, a2, a3, a4);
-                orders.Add(ord);
+                if (student.IsHaveTaxesOn(disc))
+                {
+                    Console.WriteLine(student.GetFIO);
+                }
             }
-
-            Admin admin = new Admin(a, b, c, d, e, orders);
-            return admin;
+            Console.ReadKey();
         }
 
-        static Teacher MakeNewTeacher()
-        {
-            var a = Console.ReadLine();
-            var b = Console.ReadLine();
-            var c = Console.ReadLine();
-            var d = Console.ReadLine();
-            var e = Console.ReadLine();
-            Console.WriteLine("Кол-во дисциплин");
-            int k = Int32.Parse(Console.ReadLine());
-            List<string> dsplns = new List<string>();
-            for (int j = 0; j < k; j++)
-            {
-                dsplns.Add(Console.ReadLine());
-            }
-
-            Teacher tchr = new Teacher(a, b, c, d, e, dsplns);
-            return tchr;
-        }
     }
 }

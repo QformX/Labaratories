@@ -27,5 +27,22 @@ namespace ConsoleApplication4
             Console.WriteLine(FirstName);
             Console.WriteLine(DadName);
         }
+
+        public string GetFIO { get { return SecondName; } }
+
+        public static Human MakeNewHuman()
+        {
+            Console.Write("Фамилия\t");
+            var a = Console.ReadLine();
+            Console.Write("Имя\t");
+            var b = Console.ReadLine();
+            Console.Write("Отчество\t");
+            var c = Console.ReadLine();
+            Console.Write("Дата рождения\t");
+            var d = Console.ReadLine();
+
+            Human hmn = new Human(a, b, c, d);
+            return hmn;
+        }
     }
 }

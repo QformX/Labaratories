@@ -20,5 +20,20 @@ namespace ConsoleApplication4
             this.Name = Name;
             this.Text = Text;
         }
+
+        public string GetPrefix()
+        {
+            return Prefix.ToLower();
+        }
+
+        public void PrintOrder()
+        {
+            Console.WriteLine(Prefix);
+            Console.WriteLine(Number);
+            Console.WriteLine(Name);
+            Console.WriteLine(Text);
+            Console.WriteLine();
+            Console.WriteLine();
+        }
     }
 }
