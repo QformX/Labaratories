@@ -20,9 +20,17 @@ namespace ConsoleApplication11
                 list.Add(int.Parse(Console.ReadLine()));
             }
 
-            int countP = list.Where(e => e > 0).Count();
-            int countO = list.Where(e => e < 0).Count();
-            int sum = list.Where(e => e % 2 == 0).Sum();
+            int countP = (from item in list
+                         where item > 0
+                         select item).Count();
+
+            int countO = (from item in list
+                          where item < 0
+                          select item).Count();
+
+            int sum = (from item in list
+                       where item % 2 == 0
+                       select item).Sum();
 
             Console.WriteLine("Количество положительных элементов = {0}", countP);
             Console.WriteLine("Количество отрицательных элементов = {0}", countO);
